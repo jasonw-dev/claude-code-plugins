@@ -1,0 +1,18 @@
+{
+  "name": "claude-code-plugins",
+  "owner": {
+    "name": "jasonw-dev"
+  },
+  "metadata": {
+    "description": "Personal Claude Code plugins.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "tmux-session",
+      "description": "Launch and stop Claude Code sessions in any directory on this machine, without needing anyone in front of it.",
+      "version": "1.0.0",
+      "source": "./plugins/tmux-session"
+    }
+  ]
+}
