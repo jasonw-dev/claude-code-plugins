@@ -25,7 +25,7 @@ on claude.ai a couple of seconds later.
 
 ```
 /plugin marketplace add jasonw-dev/claude-code-plugins
-/plugin install tmux-session@claude-code-plugins
+/plugin install tmux-session@jasonw-dev-plugins
 ```
 
 ## Requirements
