@@ -35,8 +35,15 @@ STARTUP_TIMEOUT = 30.0
 READY_MARKER = "remote-control is active"
 TRUST_MARKER = "trust this folder"
 # Only ever send Enter when the cursor is provably parked on the affirmative
-# option. Anything else means the screen is not what we think it is.
-TRUST_CONFIRM_RE = re.compile(r"❯\s*1\.\s*Yes, I trust this folder")
+# option. Anything else means the screen is not what we think it is. The
+# prompt has shipped in two layouts: a numbered one where the cursor starts on
+# "1. Yes, I trust this folder", and an unnumbered one where it starts on
+# "No, exit" and has to be moved down onto the Yes option first.
+TRUST_CONFIRM_RE = re.compile(r"❯\s*(?:1\.\s*)?Yes, I trust this folder")
+TRUST_OPTION = "Yes, I trust this folder"
+# How many cursor moves to attempt before declaring the screen unrecognized.
+# Both known layouts need at most one.
+MAX_TRUST_NUDGES = 3
 
 PANE_WIDTH = 200
 PANE_HEIGHT = 50
@@ -197,6 +204,7 @@ def watch_startup(tmux, tmux_name, allow_trust):
     """Poll the pane until the session is ready, blocked, or dead."""
     deadline = time.monotonic() + STARTUP_TIMEOUT
     trust_answered = False
+    nudges = 0
 
     while time.monotonic() < deadline:
         pane = capture_pane(tmux, tmux_name)
@@ -209,10 +217,16 @@ def watch_startup(tmux, tmux_name, allow_trust):
         if TRUST_MARKER in pane and not trust_answered:
             if not allow_trust:
                 return "untrusted"
-            if not TRUST_CONFIRM_RE.search(pane):
+            if TRUST_CONFIRM_RE.search(pane):
+                run([tmux, "send-keys", "-t", pane_target(tmux_name), "Enter"])
+                trust_answered = True
+            elif TRUST_OPTION in pane and nudges < MAX_TRUST_NUDGES:
+                # Unnumbered layout: cursor starts on "No, exit". Step down
+                # and let the next poll verify before confirming.
+                run([tmux, "send-keys", "-t", pane_target(tmux_name), "Down"])
+                nudges += 1
+            else:
                 return "wrong-screen"
-            run([tmux, "send-keys", "-t", pane_target(tmux_name), "Enter"])
-            trust_answered = True
 
         time.sleep(POLL_INTERVAL)
 

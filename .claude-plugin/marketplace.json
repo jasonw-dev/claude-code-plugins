@@ -11,7 +11,7 @@
     {
       "name": "tmux-session",
       "description": "Launch and stop Claude Code sessions in any directory on this machine, without needing anyone in front of it.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "source": "./plugins/tmux-session"
     }
   ]
