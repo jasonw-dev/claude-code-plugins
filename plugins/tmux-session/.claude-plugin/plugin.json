@@ -1,5 +1,5 @@
 {
   "name": "tmux-session",
-  "version": "1.0.1",
-  "description": "Launch and stop Claude Code sessions in any directory on this machine, without needing anyone in front of it."
+  "version": "1.1.0",
+  "description": "Launch and stop Claude Code sessions in any directory on this machine, without needing anyone in front of it, and bring them back into their original conversations after a reboot."
 }

@@ -103,3 +103,7 @@ stepped away from a conversation they intend to continue, and silently
 discarding that context would be a loss the user never sees. Each session costs
 a few hundred MB of memory, so it is worth mentioning if a lot of them pile up —
 but the decision to close one is always theirs.
+
+A reboot ends every session's process. The conversations themselves are kept
+on disk; to bring the sessions back into them afterwards, use the
+session-snapshot skill (save before the reboot, restore after it).
